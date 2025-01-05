@@ -6,10 +6,23 @@ dictionary_of_notes = {}  # Словарь заметок
 def create_note_func():
     print(f"\nДата создания заметки: {date_of_create.strftime("%d.%m.%Y")}")
 
-    print("\nВведите окончание даты заметки (дедлайн)")
+    print("\nВведите окончание даты заметки (дедлайн) в числовом формате")
+
     day_to_input = input("Введите день: ")
+    while not day_to_input.isdigit():
+        print("\033[91;1mВы ввели не число!\n\033[m")
+        day_to_input = input("Введите день: ")
+
     month_to_input = input("Введите месяц: ")
+    while not month_to_input.isdigit():
+        print("\033[91;1mВы ввели не число!\n\033[m")
+        month_to_input = input("Введите месяц: ")
+
     year_to_input = input("Введите год: ")
+    while not year_to_input.isdigit():
+        print("\033[91;1mВы ввели не число!\n\033[m")
+        year_to_input = input("Введите год: ")
+
     issue_date_str = day_to_input + "." + month_to_input + "." + year_to_input
     issue_date = datetime.datetime.strptime(issue_date_str, "%d.%m.%Y")
     day_deadline = abs(issue_date - date_of_create)
