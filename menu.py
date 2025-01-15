@@ -1,4 +1,5 @@
 import datetime
+
 notes_file = open('my_notes.txt', mode='r+', encoding='utf-8')
 
 date_of_create = datetime.datetime.today()
@@ -45,15 +46,33 @@ def create_note_func():
 
     return issue_date
 
+
 def save_notes_to_file(dictionary, file_name):
     for key, value in dictionary.items():
         file_name.write(f'{key} {value}\n')
+    print("\n")
+
 
 def display_notes(notes):
-    for value, p_info in notes.items():
-        for key in p_info:
-            print(key, p_info[key])
+    print("")
+    for outer_key, inner_dict in notes.items():
+        for inner_key, value in inner_dict.items():
+            if isinstance(value, list):
+                print(inner_key)
+                for item in value:
+                    print(f"\t- {item}")
+            else:
+                print(f"{inner_key} {value}")
         print("")
+
+
+def delete_note(notes, title):
+    for outer_key, inner_dict in notes.items():
+        for inner_key, value in inner_dict.items():
+            if isinstance(value, list):
+                for item in value:
+                    if title == value:
+                        print("deleted")
 
 
 while enter_from_program:
@@ -71,11 +90,11 @@ while enter_from_program:
         print("\n\033[91;1m\nВы ввели не число!\n\tВозвращение в меню!\n\033[m")
         continue
 
+    # Создать новую заметку
     if number_of_menu == 1:
         issue_date = create_note_func()
         index_of_note += 1  # Индекс создаваемой записи
         names_of_note = []  # Список всех имён
-
 
         while True:
             note_status = input('Введите статус заметки: '
@@ -114,21 +133,28 @@ while enter_from_program:
         dictionary_of_notes.update({index_of_note: notes_information})
         save_notes_to_file(notes_information, notes_file)
 
+    # Показать все заметки
     elif number_of_menu == 2:
         if not dictionary_of_notes:
             print("\033[91;1m\nУ вас нет заметок!\n\tВозвращение в меню!\n\033[m")
         else:
             display_notes(dictionary_of_notes)
 
+    # Обновить заметку
     elif number_of_menu == 3:
         print()
 
+    # Удалить заметку
     elif number_of_menu == 4:
+        title_for_delete = input("Введите имя заметки")
+        delete_note(dictionary_of_notes, title_for_delete)
         print()
 
+    # Найти заметки
     elif number_of_menu == 5:
         print()
 
+    # Выйти из программы
     elif number_of_menu == 6:
         notes_file.close()
         exit()
@@ -137,4 +163,4 @@ while enter_from_program:
         print("\n\033[91;1m\nТакого номера в меню нет!\n\tВозвращение в меню!\n\033[m")
 
     else:
-        print("dfwf")
+        print("")
