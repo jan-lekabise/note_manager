@@ -66,13 +66,24 @@ def display_notes(notes):
         print("")
 
 
-def delete_note(notes, title):
+def remove_outer_dict_by_list(notes, target_list_items):
+    keys_to_delete = []  # Список ключей внешнего словаря, которые нужно будет удалить
     for outer_key, inner_dict in notes.items():
         for inner_key, value in inner_dict.items():
             if isinstance(value, list):
+                found_target = False
                 for item in value:
-                    if title == value:
-                        print("deleted")
+                    if item in target_list_items:
+                        found_target = True
+                        break  # Прерываем цикл, как только нашли target_item
+                if found_target:
+                    keys_to_delete.append(outer_key)  # Добавляем ключ во внешний словарь, который нужно удалить
+                    break  # Выходим из цикла по inner_dict, чтобы не проверять другие ключи
+
+    for key in keys_to_delete:
+        del notes[key]
+
+    return notes
 
 
 while enter_from_program:
@@ -147,7 +158,7 @@ while enter_from_program:
     # Удалить заметку
     elif number_of_menu == 4:
         title_for_delete = input("Введите имя заметки")
-        delete_note(dictionary_of_notes, title_for_delete)
+        remove_outer_dict_by_list(dictionary_of_notes, title_for_delete)
         print()
 
     # Найти заметки

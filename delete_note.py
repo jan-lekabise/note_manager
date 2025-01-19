@@ -44,20 +44,19 @@ def create_name_of_note_func():
     return yes_no
 
 
-# ПРОБЛЕМА ЗДЕСЬ
-def delete_note_with_name(dict_note):
-    title_note = input("Введите имя заметки:")
-    res = {}
-    for key, value in dict_note.items():
-        if title_note in value['Имена вашей заметки:']:
-            res[key] = value
-        else:
-            print("Заметка не найдена")
-    return res
-
-
-def delete_note_with_user(dict_note):
-    dict_note.pop(input(""))
+def remove_outer_dict_by_list(notes, target_list_items):
+    keys_to_delete = []  # Список ключей внешнего словаря, которые нужно будет удалить
+    for outer_key, inner_dict in notes.items():
+        for inner_key, value in inner_dict.items():
+            if isinstance(value, list):
+                found_target = False
+                for item in value:
+                    if item in target_list_items:
+                        found_target = True
+                        break  # Прерываем цикл, как только нашли target_item
+                if found_target:
+                    keys_to_delete.append(outer_key)  # Добавляем ключ во внешний словарь, который нужно удалить
+                    break  # Выходим из цикла по inner_dict, чтобы не проверять другие ключи
 
 
 def display_notes(notes):
@@ -83,7 +82,8 @@ while yes_no.upper() == "ДА" or yes_no.upper() == "LF": # Процесс со�
     yes_no = input('\nСоздать имя заметки? "Да" или "Нет": ')
 
     while yes_no.upper() == "ДА" or yes_no.upper() == "LF":  # Если пользователь вписывает да в разных регистрах - ему предлагается ввести имя
-        yes_no = create_name_of_note_func()
+        names_of_note.append(input("Введите имя заметки: "))
+        yes_no = input('Создать имя заметки? "Да" или "Нет": ')
 
     note = input("\nВведите описание заметки: ")
 
@@ -105,8 +105,5 @@ yes_no = input('\n\nПрочитать все заметки? "Да" или "Н�
 if yes_no.upper() == "ДА" or yes_no.upper() == "LF":
     display_notes(dictionary_of_notes)
 
-delete_note_with_name(dictionary_of_notes)
-yes_no = input('\n\nПрочитать все заметки? "Да" или "Нет": ')
-if yes_no.upper() == "ДА" or yes_no.upper() == "LF":
-    display_notes(dictionary_of_notes)
-
+title_for_delete = input("Введите имя заметки")
+remove_outer_dict_by_list(dictionary_of_notes, title_for_delete)
